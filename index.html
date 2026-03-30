@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Catalyst Exchange — Cross-Chain AMM, Volatile Pairs &amp; How It Works (2026)</title>
+  <meta name="description" content="Complete Catalyst Exchange guide (2026): how Catalyst's cross-chain AMM works, volatile and amplified pools, CCI messaging, supported chains, how to swap and provide liquidity, CATA token, security risks, and a deep FAQ for traders and LPs.">
+  <meta name="author" content="Crypto Finance Experts">
+  <link rel="canonical" href="https://catalyst-exchange-guide.example.com/">
+  <link rel="icon" type="image/png" href="catal.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://catalyst-exchange-guide.example.com/">
+  <meta property="og:title" content="Catalyst Exchange — Cross-Chain AMM Guide: Swaps, Liquidity &amp; CATA Token (2026)">
+  <meta property="og:description" content="Practical Catalyst Exchange guide: cross-chain AMM mechanics, volatile pools, CCI messaging, how to swap cross-chain, LP strategies, CATA token, and security.">
+  <meta property="og:image" content="cover.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Catalyst Exchange — Cross-Chain AMM Guide (2026)">
+  <meta name="twitter:description" content="How Catalyst Exchange's cross-chain AMM works, volatile pools, CCI, LP yield, CATA token, and trading guide for 2026.">
+
+  <style>
+    :root {
+      --g:    #00D395;
+      --g2:   #00B57D;
+      --g3:   #009666;
+      --ga:   #56FFc0;
+      --gs:   #CCFFF0;
+
+      --ink:   #F0FFF9;
+      --sub:   #A7F3D0;
+      --muted: #94A3B8;
+      --dim:   #64748B;
+
+      --bg:    #030E0A;
+      --card:  rgba(255,255,255,.028);
+      --line:  rgba(255,255,255,.07);
+      --lg:    rgba(0,211,149,.13);
+
+      --ok:   #34D399;
+      --warn: #FBBF24;
+      --err:  #F87171;
+
+      --r:  12px;
+      --rl: 18px;
+      --gap: 1.2rem;
+      --sh: 0 8px 28px rgba(0,0,0,.58);
+      --shg: 0 4px 22px rgba(0,211,149,.13);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html { scroll-behavior: smooth }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 900px 520px at 0%   0%,  rgba(0,181,125,.10), transparent 55%),
+        radial-gradient(ellipse 700px 400px at 100% 8%,  rgba(0,211,149,.06), transparent 50%),
+        radial-gradient(ellipse 600px 360px at 50%  98%, rgba(0,150,102,.07), transparent 55%);
+      color: var(--muted);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: var(--ga); text-decoration: none }
+    a:hover { text-decoration: underline }
+    img { max-width: 100%; height: auto; display: block }
+    strong { color: #D1FAE5; font-weight: 600 }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 1.4rem }
+
+    h1,h2,h3,h4 { color: var(--ink); line-height: 1.25 }
+    h1 { font-size: clamp(2rem,5vw,3.1rem); font-weight: 800; letter-spacing: -.4px }
+    h2 { font-size: clamp(1.25rem,2.5vw,1.75rem); font-weight: 700; margin-top: 1.8rem; padding-top: .7rem; border-top: 1px solid var(--line) }
+    h3 { font-size: 1.08rem; font-weight: 700; color: var(--sub) }
+    p,li,td,th { font-size: 1rem; line-height: 1.75 }
+    .lead { font-size: 1.08rem; color: #BBF7D0 }
+
+    /* HERO */
+    header.hero {
+      padding: clamp(2.5rem,6vw,5rem) 0 clamp(2rem,4vw,3.5rem);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-card {
+      background: rgba(0,181,125,.05);
+      border: 1px solid var(--lg);
+      border-radius: var(--rl);
+      padding: clamp(1.4rem,3.5vw,2.4rem);
+      box-shadow: var(--sh), var(--shg);
+      position: relative; overflow: hidden;
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,211,149,.50), transparent);
+    }
+
+    .brand-row { display: flex; align-items: center; gap: .9rem; margin-bottom: 1rem }
+    .brand-logo {
+      width: 54px; height: 54px; border-radius: 13px;
+      border: 1px solid rgba(0,211,149,.26);
+      background: rgba(0,181,125,.09);
+      padding: .3rem; object-fit: contain;
+      box-shadow: 0 4px 14px rgba(0,181,125,.20);
+      flex: 0 0 auto;
+    }
+    .brand-label { color: var(--dim); font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: .4px }
+    .brand-sub   { color: var(--muted); font-size: .85rem }
+
+    /* CTA */
+    .cta-center { display: flex; justify-content: center; margin-top: 2rem }
+    .cta {
+      display: inline-flex; align-items: center; gap: .7rem;
+      background: linear-gradient(135deg, #56FFc0 0%, #00D395 40%, #00B57D 75%, #009666 100%);
+      color: #002B1E;
+      padding: 1.2rem 3rem;
+      border-radius: 16px;
+      font-weight: 900; font-size: 1.15rem; letter-spacing: .15px;
+      box-shadow:
+        0 0 0 1px rgba(0,211,149,.24),
+        0 0 28px rgba(0,211,149,.28),
+        0 8px 22px rgba(0,181,125,.24),
+        0 20px 48px rgba(0,150,102,.20);
+      border: none; cursor: pointer; text-decoration: none;
+      transition: transform .18s, box-shadow .18s, filter .18s;
+    }
+    .cta:hover {
+      transform: translateY(-3px) scale(1.025); filter: brightness(1.07);
+      color: #002B1E; text-decoration: none;
+      box-shadow:
+        0 0 0 1px rgba(0,211,149,.40),
+        0 0 40px rgba(0,211,149,.42),
+        0 10px 28px rgba(0,181,125,.34),
+        0 26px 58px rgba(0,150,102,.28);
+    }
+
+    /* NOTE */
+    .note {
+      border-left: 3px solid var(--g);
+      padding: .8rem 1rem;
+      background: rgba(0,181,125,.07);
+      border-radius: 0 9px 9px 0;
+      color: var(--sub); margin-top: 1rem;
+    }
+
+    /* STEPS */
+    section.step-guide {
+      padding: clamp(2rem,5vw,3.5rem) 0;
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .steps { display: grid; gap: var(--gap); grid-template-columns: 1fr }
+    .step {
+      background: var(--card); border: 1px solid var(--line);
+      border-top: 2px solid rgba(0,211,149,.28); border-radius: var(--r);
+      padding: 1.25rem; box-shadow: var(--sh); transition: transform .18s, box-shadow .18s;
+    }
+    .step:hover { transform: translateY(-3px); box-shadow: var(--sh), var(--shg) }
+    .step .icon {
+      width: 44px; height: 44px; border-radius: 9px;
+      display: inline-grid; place-items: center;
+      background: rgba(0,181,125,.11); margin-bottom: .65rem;
+      font-weight: 800; font-size: .95rem; color: var(--g);
+      border: 1px solid rgba(0,211,149,.22);
+    }
+
+    /* CARD */
+    main { padding-top: .5rem }
+    main .card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--r); padding: 1.5rem; margin: 1.2rem 0; box-shadow: var(--sh);
+    }
+    main .card > h2:first-child { margin-top: 0; border-top: none; padding-top: 0 }
+
+    /* TOC */
+    .toc { border: 1px solid var(--lg); background: rgba(0,181,125,.05); border-radius: var(--r); padding: 1.1rem 1.3rem }
+    .toc strong { color: var(--ink) }
+    .toc ul { margin: .5rem 0 0; padding-left: 1.1rem }
+    .toc li { margin: .28rem 0; font-size: .96rem }
+    .toc a { font-weight: 600 }
+
+    /* GRID */
+    .grid-2 { display: grid; gap: var(--gap); grid-template-columns: 1fr }
+    .callout-grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; margin-top: .8rem }
+    .mini { background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: var(--r); padding: 1rem }
+    .mini h3 { margin-bottom: .35rem }
+    .kpi-badges { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .55rem }
+    .kpi-badges span {
+      border: 1px solid rgba(0,211,149,.20); background: rgba(0,181,125,.08);
+      color: var(--sub); padding: .26rem .54rem;
+      border-radius: 999px; font-size: .87rem; font-weight: 600;
+    }
+
+    /* CHAIN BADGES */
+    .chain-grid { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: .8rem }
+    .chain {
+      background: rgba(255,255,255,.03); border: 1px solid var(--line);
+      border-radius: 8px; padding: .38rem .75rem;
+      font-size: .9rem; font-weight: 600; color: #CBD5E1;
+    }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--line) }
+    table { width: 100%; border-collapse: collapse; min-width: 480px }
+    th,td { padding: .8rem .95rem; border-bottom: 1px solid var(--line); text-align: left }
+    th { background: rgba(0,181,125,.07); color: var(--ink); font-weight: 700; font-size: .93rem }
+    tr.hi { background: rgba(0,181,125,.04) }
+    tr:hover td { background: rgba(255,255,255,.018) }
+    tr:last-child td { border-bottom: none }
+    .ok { color: var(--ok) } .warn { color: var(--warn) } .err { color: var(--err) }
+
+    /* EEAT */
+    .eeat { background: var(--card); border: 1px solid var(--lg); border-radius: var(--r); padding: 1.5rem; box-shadow: var(--sh) }
+    .eeat > h2:first-child { margin-top: 0; border-top: none; padding-top: 0 }
+
+    /* FAQ */
+    .faq-item { border-bottom: 1px solid var(--line); padding: .9rem 0 }
+    .faq-item:last-child { border-bottom: none }
+    .faq-button { all: unset; display: flex; justify-content: space-between; align-items: flex-start; width: 100%; cursor: pointer; gap: 1rem }
+    .faq-button:focus-visible { outline: 2px solid var(--g); border-radius: 4px }
+    .faq-button h3 { margin: 0; font-weight: 700; font-size: 1rem; line-height: 1.4 }
+    .faq-content { max-height: 0; overflow: hidden; transition: max-height .26s ease }
+    .faq-content.open { padding-top: .65rem }
+    .faq-plus { font-weight: 800; font-size: 1.35rem; color: var(--g); flex: 0 0 auto; line-height: 1; transition: transform .2s }
+    .faq-button[aria-expanded="true"] .faq-plus { transform: rotate(45deg) }
+
+    @media(min-width:860px){
+      .steps { grid-template-columns: repeat(4,1fr) }
+      .grid-2 { grid-template-columns: 1fr 1fr }
+      .callout-grid { grid-template-columns: 1fr 1fr }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero" role="banner">
+  <div class="container">
+    <div class="hero-card">
+      <div class="brand-row">
+        <img class="brand-logo" src="catal.png" alt="Catalyst Exchange logo">
+        <div>
+          <div class="brand-label">Complete DEX Guide</div>
+          <div class="brand-sub">Cross-Chain AMM · Volatile Pools · CCI Messaging · LP Yield · CATA Token</div>
+        </div>
+      </div>
+
+      <h1>Catalyst Exchange</h1>
+      <p class="lead" style="margin-top:.7rem">
+        The complete guide to <strong>Catalyst Exchange</strong> — a <strong>cross-chain AMM</strong>
+        that enables native asset swaps across multiple blockchains without wrapped tokens
+        or centralised intermediaries. Understand how Catalyst's
+        <strong>volatile and amplified pool designs</strong> work,
+        how <strong>CCI (Cross-Chain Interface) messaging</strong> enables trustless
+        cross-chain swaps, how <strong>liquidity providers</strong> earn yield
+        across chain-agnostic pools, what the <strong>CATA token</strong> unlocks,
+        and how Catalyst compares to other cross-chain DEX infrastructure.
+      </p>
+
+      <div class="cta-center">
+        <a href="#" class="cta" aria-label="Open Catalyst Exchange">
+          <span>⚗</span> Launch Catalyst
+        </a>
+      </div>
+
+      <div class="note">
+        <strong>What makes Catalyst different:</strong> Most cross-chain swaps route through
+        a bridge then a DEX — two separate steps, two sets of fees, two trust assumptions.
+        Catalyst combines both into a single atomic operation: one transaction that swaps
+        and bridges simultaneously using a shared cross-chain liquidity model.
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- STEPS -->
+<section class="step-guide" aria-labelledby="how-works">
+  <div class="container">
+    <h2 id="how-works" style="margin-top:0;border-top:none;padding-top:0">
+      How Catalyst Works: Deposit → Price → Swap → Settle Cross-Chain
+    </h2>
+    <div class="steps" role="list">
+      <article class="step" role="listitem">
+        <div class="icon">01</div>
+        <h3>LPs deposit into cross-chain pools</h3>
+        <p>Liquidity providers deposit assets into Catalyst pools deployed across multiple chains. Each chain hosts a pool module that communicates with others via CCI — together forming a single unified cross-chain liquidity layer.</p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">02</div>
+        <h3>Cross-chain pricing via shared invariant</h3>
+        <p>Catalyst uses a shared pricing invariant across all connected pool modules — meaning the price of a swap from Chain A to Chain B is calculated against the combined liquidity across both chains, not just local depth.</p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">03</div>
+        <h3>Swap initiated on source chain</h3>
+        <p>The trader sends tokens to the Catalyst pool on the source chain. The source pool calculates the output amount using the cross-chain invariant and emits a CCI message to the destination chain pool.</p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">04</div>
+        <h3>Destination pool settles atomically</h3>
+        <p>The destination chain pool receives the CCI message, verifies the cross-chain proof, and releases the output tokens to the trader. The swap settles as a single cross-chain atomic operation — no manual claiming required.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="container" role="main">
+
+  <!-- TOC -->
+  <section class="card toc" aria-label="Table of Contents">
+    <strong>On this page — Catalyst Exchange:</strong>
+    <ul>
+      <li><a href="#overview">What is Catalyst Exchange and the cross-chain AMM thesis</a></li>
+      <li><a href="#cci">CCI (Cross-Chain Interface): how cross-chain messaging works in Catalyst</a></li>
+      <li><a href="#pools">Pool types: volatile pools and amplified pools explained</a></li>
+      <li><a href="#pricing">Cross-chain pricing: how the unified invariant works</a></li>
+      <li><a href="#chains">Supported chains and assets on Catalyst</a></li>
+      <li><a href="#how-to">How to swap cross-chain on Catalyst: step-by-step</a></li>
+      <li><a href="#lp">Providing liquidity on Catalyst: yield mechanics and risks</a></li>
+      <li><a href="#cata">CATA token: utility, governance, and ecosystem role</a></li>
+      <li><a href="#safety">Catalyst security: cross-chain risks, AMM risks, and safeguards</a></li>
+      <li><a href="#comparison">Catalyst vs THORChain vs Stargate vs Squid: cross-chain DEX comparison</a></li>
+      <li><a href="#best-practices">Best practices for traders and LPs on Catalyst</a></li>
+      <li><a href="#troubleshooting">Troubleshooting: failed swaps, pending cross-chain transactions, LP issues</a></li>
+      <li><a href="#eeat">Authoritative sources &amp; references</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section class="card" id="overview">
+    <h2>What Is Catalyst Exchange and the Cross-Chain AMM Thesis</h2>
+    <p>
+      <strong>Catalyst Exchange</strong> is a cross-chain automated market maker (AMM)
+      designed to enable native asset swaps between different blockchains in a single
+      atomic transaction — without requiring the trader to manually bridge assets
+      between chains before swapping on a DEX.
+    </p>
+    <p>
+      The cross-chain AMM thesis holds that the current two-step process
+      (bridge then swap) is inefficient: it doubles fees, increases slippage,
+      creates two separate failure points, and requires users to understand bridge mechanics
+      in addition to DEX mechanics. Catalyst collapses these two operations into one —
+      pricing and executing the full source-to-destination swap in a single user transaction.
+    </p>
+
+    <div class="callout-grid">
+      <div class="mini">
+        <h3>For traders</h3>
+        <p style="color:var(--muted)">Swap native assets directly across chains — ETH on Ethereum for USDC on Arbitrum, or MATIC on Polygon for BNB on BSC — in a single transaction. No manual bridging, no intermediate wrapped tokens, no second wallet interaction on the destination chain.</p>
+        <div class="kpi-badges"><span>One transaction</span><span>Native assets</span><span>No wrapping</span></div>
+      </div>
+      <div class="mini">
+        <h3>For liquidity providers</h3>
+        <p style="color:var(--muted)">Deposit into Catalyst's chain-agnostic pools and earn fees from cross-chain swap volume across all connected chains simultaneously. Single LP position captures fee income from multiple chains — capital-efficient cross-chain liquidity provision.</p>
+        <div class="kpi-badges"><span>Multi-chain fees</span><span>Single deposit</span><span>Chain-agnostic</span></div>
+      </div>
+      <div class="mini">
+        <h3>For developers</h3>
+        <p style="color:var(--muted)">Catalyst's modular pool architecture and CCI interface allow developers to build cross-chain applications that incorporate atomic swaps as a primitive — enabling cross-chain DeFi protocols that don't require users to manage assets across multiple chains manually.</p>
+        <div class="kpi-badges"><span>Composable</span><span>CCI API</span><span>Developer SDK</span></div>
+      </div>
+      <div class="mini">
+        <h3>Catalyst's unique positioning</h3>
+        <p style="color:var(--muted)">Unlike bridges (which just move assets) or single-chain DEXs (which only swap locally), Catalyst occupies the intersection: it moves assets AND swaps them in one step, using shared liquidity that prices across chain boundaries simultaneously.</p>
+        <div class="kpi-badges"><span>Bridge + DEX unified</span><span>Shared liquidity</span><span>Atomic</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CCI -->
+  <section class="card" id="cci">
+    <h2>CCI (Cross-Chain Interface): How Cross-Chain Messaging Powers Catalyst</h2>
+    <p>
+      <strong>CCI (Cross-Chain Interface)</strong> is Catalyst's messaging layer —
+      the protocol mechanism that allows Catalyst pool contracts on different chains
+      to communicate, share pricing state, and coordinate swap settlement atomically.
+    </p>
+
+    <div class="table-wrap">
+      <table aria-label="CCI mechanics">
+        <thead>
+          <tr><th>Step</th><th>What CCI does</th><th>Why it matters</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>1. Source pool sends message</td>
+            <td>After receiving swap input, source pool emits a CCI message with swap details and proof of received tokens</td>
+            <td>Notifies destination pool that a cross-chain swap has been initiated and validated</td>
+          </tr>
+          <tr>
+            <td>2. Message relayed cross-chain</td>
+            <td>CCI relay network transmits the message to the destination chain</td>
+            <td>Trustless relay — message includes cryptographic proof verifiable by destination pool</td>
+          </tr>
+          <tr class="hi">
+            <td>3. Destination pool verifies</td>
+            <td>Destination pool verifies the CCI proof and checks output amount against current invariant state</td>
+            <td>Ensures the cross-chain pricing was calculated correctly and output matches agreement</td>
+          </tr>
+          <tr>
+            <td>4. Settlement executed</td>
+            <td>Destination pool releases output tokens to trader's address on destination chain</td>
+            <td>Atomic settlement — no intermediate custody, no partial fills, no manual claiming</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <strong>CCI is messaging-protocol agnostic:</strong> Catalyst's CCI layer is designed
+      to work with multiple underlying cross-chain messaging protocols — allowing it
+      to use the most secure and cost-effective relay available per chain pair,
+      rather than being locked into a single messaging infrastructure provider.
+    </div>
+  </section>
+
+  <!-- POOLS -->
+  <section class="card" id="pools">
+    <h2>Pool Types: Volatile Pools and Amplified Pools Explained</h2>
+    <p>
+      Catalyst offers two AMM pool types, each optimised for different asset pairs
+      and liquidity strategies. Choosing the right pool type significantly affects
+      trading efficiency and LP return profile.
+    </p>
+
+    <div class="callout-grid">
+      <div class="mini">
+        <h3>Volatile pools</h3>
+        <p style="color:var(--muted)">Based on the constant product formula (x × y = k), similar to Uniswap v2. Suitable for asset pairs expected to diverge in value — e.g. ETH/USDC, BTC/ETH. Provides liquidity across the full price range but is subject to impermanent loss when prices diverge significantly.</p>
+        <div class="kpi-badges"><span>x·y=k formula</span><span>Full-range LP</span><span>Divergent pairs</span></div>
+      </div>
+      <div class="mini">
+        <h3>Amplified pools</h3>
+        <p style="color:var(--muted)">Based on a StableSwap-style invariant (similar to Curve), optimised for asset pairs expected to trade near a target ratio — e.g. USDC/USDT, ETH/stETH, WBTC/BTC. Provides significantly better capital efficiency and lower slippage for pegged pairs, with lower impermanent loss risk when the peg holds.</p>
+        <div class="kpi-badges"><span>StableSwap style</span><span>Near-peg LPs</span><span>Capital-efficient</span></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Cross-chain pool composition:</strong> Each Catalyst pool exists as a set of
+      synchronised contracts across multiple chains — not a single contract on one chain.
+      A volatile ETH pool, for example, might have modules on Ethereum, Arbitrum, and Optimism
+      that share pricing state via CCI, allowing LPs on any chain to capture fees from
+      swaps occurring on all connected chains.
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="card" id="pricing">
+    <h2>Cross-Chain Pricing: How Catalyst's Unified Invariant Works</h2>
+    <p>
+      The most technically novel aspect of Catalyst is its <strong>cross-chain pricing invariant</strong> —
+      a mathematical formula that prices swaps across chain boundaries as if all connected
+      pool modules were a single unified pool.
+    </p>
+
+    <div class="callout-grid">
+      <div class="mini">
+        <h3>Single-chain AMM pricing</h3>
+        <p style="color:var(--muted)">Traditional AMM: swap price depends only on the ratio of the two assets in the local pool. Deep local liquidity = low slippage. Shallow pool = high slippage. Price is fully determined by local state.</p>
+        <div class="kpi-badges"><span>Local state only</span><span>Single pool depth</span></div>
+      </div>
+      <div class="mini">
+        <h3>Catalyst cross-chain pricing</h3>
+        <p style="color:var(--muted)">Catalyst: swap price incorporates the combined liquidity across all connected pool modules on all chains. A swap from Chain A to Chain B is priced against the aggregate pool depth, not just the local chain's balance. Deeper effective liquidity for the same LP capital.</p>
+        <div class="kpi-badges"><span>Aggregated depth</span><span>Cross-chain state</span><span>Better pricing</span></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Why this improves capital efficiency:</strong> A single LP deposit in a Catalyst pool
+      contributes to pricing on every connected chain simultaneously. The same capital that earns
+      fees from ETH swaps on Ethereum also earns fees from ETH swaps initiated on Arbitrum —
+      without the LP needing to deploy separate positions on each chain.
+    </div>
+  </section>
+
+  <!-- CHAINS -->
+  <section class="card" id="chains">
+    <h2>Supported Chains and Assets on Catalyst Exchange</h2>
+    <p>
+      Catalyst is chain-agnostic by design — any EVM-compatible chain (and eventually non-EVM chains)
+      can be connected to Catalyst's cross-chain pool infrastructure as new CCI modules are deployed.
+    </p>
+
+    <div class="chain-grid" role="list" aria-label="Supported chains">
+      <span class="chain">Ethereum</span>
+      <span class="chain">Arbitrum</span>
+      <span class="chain">Optimism</span>
+      <span class="chain">Base</span>
+      <span class="chain">Polygon</span>
+      <span class="chain">BNB Chain</span>
+      <span class="chain">Avalanche</span>
+      <span class="chain">Scroll</span>
+      <span class="chain">+ expanding</span>
+    </div>
+
+    <p style="margin-top:1rem">
+      Asset support covers native gas tokens and major ERC-20s with sufficient cross-chain
+      liquidity depth. Amplified pool support focuses on stablecoins and pegged assets
+      where capital efficiency is highest. Volatile pool support covers major DeFi tokens
+      and native chain assets.
+    </p>
+
+    <div class="note">
+      <strong>Catalyst is in active development:</strong> As a newer cross-chain DEX protocol,
+      Catalyst's chain and asset coverage expands continuously. Verify current supported
+      chains and pool availability in the official Catalyst app before planning a swap strategy.
+    </div>
+  </section>
+
+  <!-- HOW TO -->
+  <section class="card" id="how-to">
+    <h2>How to Swap Cross-Chain on Catalyst: Step-by-Step Tutorial</h2>
+    <ol style="padding-left:1.3rem">
+      <li style="margin-bottom:.6rem"><strong>Go to the official Catalyst Exchange app</strong> — bookmark the URL and verify the domain before connecting your wallet. Phishing sites mimicking new DEX protocols are common.</li>
+      <li style="margin-bottom:.6rem"><strong>Connect your wallet</strong> — MetaMask, Rabby, or any EVM-compatible wallet. Ensure you're on the source chain network you want to swap from.</li>
+      <li style="margin-bottom:.6rem"><strong>Select source chain, source token, and amount</strong> — choose the asset and chain you're sending from.</li>
+      <li style="margin-bottom:.6rem"><strong>Select destination chain and token</strong> — choose where you want to receive. Catalyst calculates the cross-chain output price automatically.</li>
+      <li style="margin-bottom:.6rem"><strong>Review the quote</strong> — inspect the estimated received amount, cross-chain fee breakdown, estimated settlement time, and price impact before proceeding.</li>
+      <li style="margin-bottom:.6rem"><strong>Confirm slippage tolerance</strong> — set an appropriate slippage limit for the pool type (amplified pools allow tighter slippage; volatile pools may need wider tolerance for large sizes).</li>
+      <li style="margin-bottom:.6rem"><strong>Approve and confirm the swap transaction</strong> — sign the approval for the Catalyst contract to interact with your tokens, then confirm the swap transaction on the source chain.</li>
+      <li><strong>Track settlement</strong> — the Catalyst interface shows cross-chain settlement progress. Most swaps settle within a few minutes to 15 minutes depending on CCI relay speed and destination chain finality.</li>
+    </ol>
+
+    <div class="note">
+      <strong>No destination chain interaction needed:</strong> Unlike bridge-then-swap flows,
+      Catalyst's atomic settlement requires no action from you on the destination chain.
+      Tokens arrive automatically once the CCI message is processed and verified.
+    </div>
+  </section>
+
+  <!-- LP -->
+  <section class="card" id="lp">
+    <h2>Providing Liquidity on Catalyst: Yield Mechanics and What LPs Need to Know</h2>
+    <p>
+      Catalyst LPs deposit assets into cross-chain pool modules and earn a share of
+      swap fees from all cross-chain transactions that route through their pool —
+      including swaps initiated on chains other than where the LP deposited.
+    </p>
+
+    <div class="table-wrap">
+      <table aria-label="LP comparison by pool type">
+        <thead>
+          <tr><th>Pool type</th><th>Best assets</th><th>IL risk</th><th>Fee rate</th><th>Capital efficiency</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>Volatile pool</td>
+            <td>ETH, BTC, major tokens</td>
+            <td class="warn">High if prices diverge</td>
+            <td>Higher (compensates IL risk)</td>
+            <td class="warn">Moderate</td>
+          </tr>
+          <tr>
+            <td>Amplified pool</td>
+            <td>USDC, USDT, stETH, cbETH</td>
+            <td class="ok">Low if peg holds</td>
+            <td>Lower (tighter spread)</td>
+            <td class="ok">High near peg</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout-grid" style="margin-top:1rem">
+      <div class="mini">
+        <h3>Cross-chain LP advantage</h3>
+        <p style="color:var(--muted)">A single LP position on Catalyst earns fees from cross-chain swap volume across all connected chains — not just the chain where the LP deposited. This aggregates fee income from multiple ecosystems into one position without requiring the LP to manage multiple separate deployments.</p>
+        <div class="kpi-badges"><span>Multi-chain fees</span><span>Single position</span></div>
+      </div>
+      <div class="mini">
+        <h3>Cross-chain LP risks</h3>
+        <p style="color:var(--muted)">Standard AMM impermanent loss applies. Additionally, CCI messaging failures or cross-chain settlement delays could temporarily disrupt pool rebalancing. Smart-contract risk spans multiple chain deployments — each adds incremental surface area.</p>
+        <div class="kpi-badges"><span>Impermanent loss</span><span>CCI risk</span><span>Multi-chain contracts</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATA TOKEN -->
+  <section class="card" id="cata">
+    <h2>CATA Token: Utility, Governance, and Ecosystem Role</h2>
+    <p>
+      <strong>CATA</strong> is Catalyst Exchange's native token, designed to align
+      protocol stakeholders and incentivise long-term ecosystem participation.
+    </p>
+
+    <div class="table-wrap">
+      <table aria-label="CATA token utility">
+        <thead>
+          <tr><th>Function</th><th>How CATA is used</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>Governance</td>
+            <td>CATA holders vote on pool parameters, supported chain additions, fee tiers, and protocol upgrades via on-chain governance</td>
+          </tr>
+          <tr>
+            <td>LP incentives</td>
+            <td>CATA emissions incentivise liquidity provision in strategic pools — particularly for new chain deployments where organic fee income is still growing</td>
+          </tr>
+          <tr class="hi">
+            <td>Fee discounts</td>
+            <td>Holding or staking CATA qualifies traders for reduced cross-chain swap fees — rewarding active protocol participants</td>
+          </tr>
+          <tr>
+            <td>Staking rewards</td>
+            <td>Staked CATA earns a share of protocol fee revenue — aligning long-term holders with Catalyst's cross-chain swap volume growth</td>
+          </tr>
+          <tr class="hi">
+            <td>CCI security participation</td>
+            <td>CATA may be used as collateral or stake in Catalyst's CCI relay security model — incentivising honest cross-chain message relaying</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SAFETY -->
+  <section class="card" id="safety">
+    <h2>Catalyst Security: Cross-Chain Risks, AMM Risks, and Safeguards</h2>
+
+    <div class="table-wrap">
+      <table aria-label="Risk analysis">
+        <thead>
+          <tr><th>Risk</th><th>Level</th><th>Mitigation</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>Smart-contract exploit (multi-chain)</td>
+            <td class="warn">Medium-High</td>
+            <td>Audits across all chain deployments; bug bounty; phased rollout with TVL caps</td>
+          </tr>
+          <tr>
+            <td>CCI messaging failure</td>
+            <td class="warn">Low-Medium</td>
+            <td>CCI timeout and refund mechanism — funds return to source if settlement fails</td>
+          </tr>
+          <tr class="hi">
+            <td>Cross-chain pricing manipulation</td>
+            <td class="warn">Low-Medium</td>
+            <td>Shared invariant design limits profitable cross-chain price manipulation; slippage limits protect traders</td>
+          </tr>
+          <tr>
+            <td>Impermanent loss (LPs)</td>
+            <td class="warn">Medium (volatile pools)</td>
+            <td>Choose amplified pools for pegged assets; size volatile pool positions to acceptable IL exposure</td>
+          </tr>
+          <tr class="hi">
+            <td>New protocol risk</td>
+            <td class="warn">Medium</td>
+            <td>Catalyst is a newer protocol — battle-testing is ongoing. Start with small positions; monitor TVL growth as a maturity signal</td>
+          </tr>
+          <tr>
+            <td>Phishing / fake Catalyst sites</td>
+            <td class="err">High (user-controlled)</td>
+            <td>Bookmark official URL; verify domain before every wallet connection</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="card" id="comparison">
+    <h2>Catalyst vs THORChain vs Stargate vs Squid: Cross-Chain DEX Comparison</h2>
+
+    <div class="table-wrap">
+      <table aria-label="Cross-chain DEX comparison">
+        <thead>
+          <tr><th>Feature</th><th>Catalyst</th><th>THORChain</th><th>Stargate</th><th>Squid (Axelar)</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>Swap mechanism</td>
+            <td>Cross-chain AMM (shared invariant)</td>
+            <td>Native asset AMM (RUNE-paired)</td>
+            <td>Unified liquidity bridge (Delta algo)</td>
+            <td>Bridge + DEX aggregator</td>
+          </tr>
+          <tr>
+            <td>Native assets (no wrapping)</td>
+            <td class="ok">Yes</td>
+            <td class="ok">Yes (native BTC, ETH)</td>
+            <td class="warn">Canonical tokens</td>
+            <td class="warn">Via bridge wrapping</td>
+          </tr>
+          <tr class="hi">
+            <td>Atomic settlement</td>
+            <td class="ok">Yes — single tx</td>
+            <td class="ok">Yes</td>
+            <td class="ok">Yes</td>
+            <td class="warn">Two-step (bridge + swap)</td>
+          </tr>
+          <tr>
+            <td>Pool types</td>
+            <td class="ok">Volatile + amplified</td>
+            <td class="warn">RUNE-paired symmetric pools</td>
+            <td class="ok">Stablecoin-optimised</td>
+            <td class="warn">DEX-dependent</td>
+          </tr>
+          <tr class="hi">
+            <td>EVM focus</td>
+            <td class="ok">EVM-native</td>
+            <td class="warn">Custom chain (non-EVM)</td>
+            <td class="ok">EVM-focused</td>
+            <td class="ok">EVM + Cosmos</td>
+          </tr>
+          <tr>
+            <td>Protocol maturity</td>
+            <td class="warn">Newer — growing</td>
+            <td class="ok">Battle-tested (4+ years)</td>
+            <td class="ok">Established</td>
+            <td class="warn">Growing</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note" style="margin-top:1rem">
+      <strong>Catalyst's niche:</strong> EVM-native cross-chain swaps with both volatile and
+      amplified pool support — the combination of stablecoin capital efficiency and volatile asset coverage
+      in a unified cross-chain AMM is relatively unique. THORChain leads for non-EVM native
+      asset swaps (especially BTC); Stargate leads for stablecoin volume; Catalyst targets
+      the gap between them with a flexible, EVM-optimised cross-chain AMM.
+    </div>
+  </section>
+
+  <!-- BEST PRACTICES -->
+  <section class="card" id="best-practices">
+    <h2>Best Practices for Traders and Liquidity Providers on Catalyst</h2>
+
+    <h3>For traders</h3>
+    <ul style="padding-left:1.2rem; margin-bottom:1.2rem">
+      <li style="margin-bottom:.5rem"><strong>Check price impact on large swaps</strong> — cross-chain pool depth may be shallower than single-chain DEXs for less common pairs. Always review the price impact percentage before confirming large trades.</li>
+      <li style="margin-bottom:.5rem"><strong>Set appropriate slippage</strong> — amplified pools support tight slippage (0.1–0.5%); volatile pools on cross-chain routes may need 0.5–1.5%. Do not set slippage above 2–3% as it exposes you to MEV on the source chain.</li>
+      <li style="margin-bottom:.5rem"><strong>Verify destination token and chain</strong> — cross-chain swaps are irreversible once initiated. Confirm the expected output token and destination chain match your intent before signing.</li>
+      <li><strong>Bookmark the official Catalyst URL</strong> — new DEX protocols are high-value phishing targets. Verify the domain every session.</li>
+    </ul>
+
+    <h3>For liquidity providers</h3>
+    <ul style="padding-left:1.2rem">
+      <li style="margin-bottom:.5rem"><strong>Match pool type to asset characteristics</strong> — use amplified pools for stablecoins and pegged assets; volatile pools for assets you expect to diverge. Wrong pool choice amplifies impermanent loss.</li>
+      <li style="margin-bottom:.5rem"><strong>Start with a small position</strong> — Catalyst is a newer protocol. Test the full LP cycle (deposit, earn fees, withdraw) with a small amount before committing significant capital.</li>
+      <li style="margin-bottom:.5rem"><strong>Monitor cross-chain pool balance</strong> — heavily directional swap flows can imbalance cross-chain pools. Significantly imbalanced pools may have reduced fee income until flows rebalance.</li>
+      <li><strong>Revoke approvals after exiting</strong> — multi-chain smart-contract approvals accumulate. Use Revoke.cash to clean up after removing LP positions.</li>
+    </ul>
+  </section>
+
+  <!-- TROUBLESHOOTING -->
+  <section class="card" id="troubleshooting">
+    <h2>Troubleshooting Catalyst: Failed Swaps, Pending Transactions, and LP Issues</h2>
+
+    <h3>"My cross-chain swap has been pending for a long time"</h3>
+    <ul style="padding-left:1.2rem">
+      <li>Verify the source chain transaction confirmed on-chain using the source block explorer — if the source transaction is unconfirmed, the swap hasn't started yet.</li>
+      <li>CCI message relay times vary by chain pair — some routes are faster than others depending on the underlying messaging infrastructure. Check the Catalyst interface for the estimated settlement time specific to your route.</li>
+      <li>If the swap exceeds the maximum settlement time without completing, Catalyst's timeout mechanism triggers an automatic refund to your source chain address — no manual action required in most cases.</li>
+    </ul>
+
+    <h3>"I received fewer tokens than the quoted amount"</h3>
+    <ul style="padding-left:1.2rem">
+      <li>Cross-chain swaps execute against live pool state — if significant other trades occurred between your quote and execution, the price may have moved within your slippage tolerance. The received amount is within your set slippage bounds.</li>
+      <li>Verify you're looking at the correct token on the destination chain — some token addresses may look unfamiliar. Confirm the received token contract address against Catalyst's official token registry.</li>
+    </ul>
+
+    <h3>"I can't remove my LP position"</h3>
+    <ul style="padding-left:1.2rem">
+      <li>LP withdrawal requires sufficient token balance in the pool. If the pool is highly imbalanced (most assets on one chain), withdrawal of certain assets may be temporarily limited. Try withdrawing the asset with higher current pool availability.</li>
+      <li>Ensure you have sufficient gas on the chain where your LP position is recorded. LP withdrawal transactions require gas to execute the on-chain LP token burn.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Source chain verification first:</strong> For any Catalyst issue, always check the
+      source chain transaction status on a block explorer before contacting support.
+      If the source transaction failed, no cross-chain action occurred and your funds are safe in your wallet.
+    </div>
+  </section>
+
+  <!-- EEAT -->
+  <section class="eeat" id="eeat" aria-labelledby="eeat-title">
+    <h2 id="eeat-title">Catalyst Exchange: Authoritative References &amp; External Sources</h2>
+
+    <h3>Catalyst Exchange — Official Sources</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://catalyst.exchange/" target="_blank" rel="noopener nofollow">Catalyst Exchange — Official App</a></li>
+      <li><a href="https://docs.catalyst.exchange/" target="_blank" rel="noopener nofollow">Catalyst Exchange — Official Documentation</a></li>
+      <li><a href="https://github.com/reednaa/catalyst" target="_blank" rel="noopener nofollow">Catalyst Exchange — Smart Contracts (GitHub)</a></li>
+    </ul>
+
+    <h3>Cross-Chain DEX Research</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://ethereum.org/en/bridges/" target="_blank" rel="noopener nofollow">Ethereum.org — Cross-Chain Bridges Overview</a></li>
+      <li><a href="https://defillama.com/" target="_blank" rel="noopener nofollow">DeFiLlama — Cross-Chain DEX TVL Data</a></li>
+      <li><a href="https://dune.com/browse/dashboards" target="_blank" rel="noopener nofollow">Dune Analytics — Cross-Chain AMM Dashboards</a></li>
+    </ul>
+
+    <h3>AMM &amp; Liquidity Design</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://curve.fi/files/stableswap-paper.pdf" target="_blank" rel="noopener nofollow">Curve Finance — StableSwap Invariant Paper</a></li>
+      <li><a href="https://uniswap.org/whitepaper.pdf" target="_blank" rel="noopener nofollow">Uniswap — Constant Product AMM Whitepaper</a></li>
+    </ul>
+
+    <h3>Security</h3>
+    <ul style="padding-left:1.2rem">
+      <li><a href="https://revoke.cash/" target="_blank" rel="noopener nofollow">Revoke.cash — Token Approval Manager</a></li>
+      <li><a href="https://blog.openzeppelin.com/security-audits" target="_blank" rel="noopener nofollow">OpenZeppelin — Smart Contract Security Audits</a></li>
+      <li><a href="https://rekt.news/" target="_blank" rel="noopener nofollow">Rekt.news — DeFi &amp; Bridge Exploit Post-Mortems</a></li>
+    </ul>
+
+    <div class="note" style="margin-top:1.2rem">
+      <strong>About:</strong> Prepared by Crypto Finance Experts as a practical, SEO-oriented knowledge base for
+      <em>Catalyst Exchange</em>: cross-chain AMM mechanics, volatile/amplified pools, CCI messaging, LP yield, CATA token, security, and trading guide.
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="card" id="faq" aria-labelledby="faq-title">
+    <h2 id="faq-title" style="margin-top:0;border-top:none;padding-top:0">Catalyst Exchange: Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f1" id="b1">
+        <h3>What is Catalyst Exchange and how is it different from a regular DEX?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f1" class="faq-content" role="region" aria-labelledby="b1">
+        <p>Catalyst is a cross-chain AMM that enables native asset swaps between different blockchains in a single atomic transaction. Unlike regular DEXs that only operate on one chain, Catalyst pools span multiple chains simultaneously — using CCI (Cross-Chain Interface) messaging to synchronise pricing and settle swaps across chains. The result is bridge + swap in one step, with no wrapped tokens or intermediate assets required.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f2" id="b2">
+        <h3>What is CCI and why does it matter for cross-chain swaps?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f2" class="faq-content" role="region" aria-labelledby="b2">
+        <p>CCI (Cross-Chain Interface) is Catalyst's messaging layer that allows pool contracts on different chains to communicate. When you initiate a swap from Chain A to Chain B, the source pool sends a CCI message carrying the swap proof to the destination pool, which then releases your tokens upon verification. CCI enables atomic settlement — you don't need to interact with the destination chain manually. CCI is designed to work with multiple underlying messaging protocols, avoiding single-provider dependency.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f3" id="b3">
+        <h3>What is the difference between volatile pools and amplified pools?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f3" class="faq-content" role="region" aria-labelledby="b3">
+        <p>Volatile pools use a constant product formula (x × y = k) — suitable for assets expected to diverge in price (ETH/USDC, BTC/ETH). They provide liquidity across the full price range but incur high impermanent loss when prices move significantly. Amplified pools use a StableSwap-style invariant — optimised for assets expected to trade near a fixed ratio (USDC/USDT, stETH/ETH). They offer far better capital efficiency and lower slippage near the peg, with much lower impermanent loss as long as the peg holds.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f4" id="b4">
+        <h3>How do I receive tokens on the destination chain — do I need to do anything?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f4" class="faq-content" role="region" aria-labelledby="b4">
+        <p>No — Catalyst's atomic settlement via CCI means tokens arrive in your wallet on the destination chain automatically once the cross-chain message is processed. You do not need to switch networks, visit the destination chain's app, or claim anything manually. The Catalyst interface shows real-time settlement progress, but the swap completes without further user action after the initial confirmation on the source chain.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f5" id="b5">
+        <h3>Can I earn yield as a liquidity provider on Catalyst?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f5" class="faq-content" role="region" aria-labelledby="b5">
+        <p>Yes — Catalyst LPs deposit assets into cross-chain pool modules and earn a proportional share of swap fees from all trades routing through the pool, including swaps initiated on other chains. The cross-chain nature of Catalyst pools means a single LP position captures fee income from volume across all connected chains, not just the chain where the LP deposited. LP risks include impermanent loss, smart-contract risk, and CCI messaging disruptions.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f6" id="b6">
+        <h3>What happens if a Catalyst cross-chain swap fails mid-execution?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f6" class="faq-content" role="region" aria-labelledby="b6">
+        <p>If a CCI message fails to deliver or the destination pool cannot settle the swap (e.g. insufficient liquidity), Catalyst's timeout mechanism triggers an automatic refund to your source chain address after the maximum settlement window expires. You should not need to take manual action in most cases — the protocol handles recovery automatically. If you believe a refund is overdue, check the Catalyst interface's transaction history for refund status.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f7" id="b7">
+        <h3>How does Catalyst compare to THORChain for cross-chain swaps?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f7" class="faq-content" role="region" aria-labelledby="b7">
+        <p>Both are native-asset cross-chain DEXs, but with significant differences. THORChain uses RUNE as a routing asset and supports non-EVM chains including native Bitcoin — making it the dominant protocol for BTC cross-chain swaps. Catalyst is EVM-native and designed around a shared cross-chain invariant without a required routing asset — offering more flexibility for EVM-to-EVM swaps and supporting both volatile and stablecoin-optimised (amplified) pool types. Choose THORChain for BTC native swaps; Catalyst for EVM-native cross-chain efficiency.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f8" id="b8">
+        <h3>What is the CATA token and should I hold it?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f8" class="faq-content" role="region" aria-labelledby="b8">
+        <p>CATA is Catalyst's native token providing governance rights (vote on protocol parameters), LP incentives (emissions to strategic pools), fee discounts for active traders, staking rewards (share of protocol fee revenue), and potential CCI relay security participation. Whether to hold CATA depends on your level of Catalyst usage and governance interest — passive users gain little from holding, while active traders (fee discounts) and committed governance participants benefit most from long-term CATA positions.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f9" id="b9">
+        <h3>Is Catalyst Exchange safe to use as a newer protocol?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f9" class="faq-content" role="region" aria-labelledby="b9">
+        <p>Catalyst has undergone smart-contract audits and has an active bug bounty programme, but as a relatively new protocol it has less battle-testing than established bridges and DEXs. The multi-chain smart-contract architecture means the risk surface spans multiple chain deployments simultaneously. Standard advice: start with small amounts to verify the full flow, use a hardware wallet for significant positions, and monitor TVL growth as a maturity indicator. The core cross-chain swap mechanics (atomic settlement, automatic refunds on failure) are designed to protect user funds from mid-execution failures.</p>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="container" role="contentinfo" style="padding:2.5rem 0; border-top:1px solid var(--line); margin-top:2rem">
+  <p style="color:var(--dim); font-size:.93rem">© 2026 Catalyst Exchange Guide. Educational content with a security-first operational focus. Not financial advice.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.faq-button').forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+        const c = document.getElementById(b.getAttribute('aria-controls'));
+        c.classList.remove('open'); c.style.maxHeight = '0';
+      });
+      if (!isOpen) {
+        btn.setAttribute('aria-expanded', 'true');
+        const content = document.getElementById(btn.getAttribute('aria-controls'));
+        content.classList.add('open');
+        content.style.maxHeight = content.scrollHeight + 'px';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
